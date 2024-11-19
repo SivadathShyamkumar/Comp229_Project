@@ -179,7 +179,7 @@ function App() {
             <p>Description: {book.description}</p>
             <p>Genre: {book.genre}</p>
             <p>Author: {book.author}</p>
-            <p>ISBN: ${book.isbn}</p>
+            <p>ISBN: {book.isbn}</p>
             <p>Status: {book.status}</p>
             <p>Category: {book.category}</p>
             <button onClick={() => handleEdit(book)}>Edit</button>
