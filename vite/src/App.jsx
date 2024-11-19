@@ -66,6 +66,7 @@ function App() {
       const response = await fetch(`${database}/${id}`, {
         method: 'DELETE',
       });
+      fetchBooks();
     } catch (error) {
       console.error('Failed to delete book:', error);
     }
