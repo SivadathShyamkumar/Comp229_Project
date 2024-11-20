@@ -1,27 +1,33 @@
-require('dotenv').config()
+require('dotenv').config();
 const cors = require('cors');
-const express = require('express')
-const app = express()
-const mongoose = require('mongoose')    
+const express = require('express');
+const mongoose = require('mongoose');
+const authRouter = require('./routes/auth');
+const booksRouter = require('./routes/books'); // Import the books route
+const authenticateToken = require('./middleware/authenticateToken');
 
-const port = 3000;
+const app = express();
+const port = process.env.PORT || 3000;
 
+// Middleware
 app.use(cors({
     origin: 'http://localhost:5173'
-  }));
+}));
+app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
-const db = mongoose.connection
-db.on('error', (error) => console.error(error))
-db.once('open', () => console.log('Connected to Database'))
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Connected to Database'))
+    .catch((error) => console.error('Error connecting to MongoDB:', error));
 
-app.use(express.json())
+// Routes
+app.use('/auth', authRouter); // Authentication routes
+app.use('/books', authenticateToken, booksRouter); // Protect book routes
 
-const booksRouter = require('./routes/books')
-app.use('/books', booksRouter)
-
+// Base Route
 app.get('/', (req, res) => {
-    res.send('Welcome to our library');
+    res.send('Welcome to our Library Management System');
 });
 
-app.listen(port, () => console.log('Server Started'))
+// Start Server
+app.listen(port, () => console.log(`Server started on port ${port}`));
